@@ -55,3 +55,7 @@ header {
 	text-align: center;
 	margin: 4px 0px;
 }
+
+.move {
+	transition: all 3s ease-in-out;
+  }

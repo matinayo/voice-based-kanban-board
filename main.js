@@ -1,11 +1,9 @@
 const list_items = document.querySelectorAll('.list-item');
 const lists = document.querySelectorAll('.list');
-const id = "b";
 
 for (let i = 0; i < list_items.length; i++) {
   const item = list_items[i];
 
-  if (item.id === id) {
     // on start of dragging item, remove item from list 
     item.addEventListener('dragstart', function() {
       draggedItem = item;
@@ -20,7 +18,7 @@ for (let i = 0; i < list_items.length; i++) {
         draggedItem = null;
       }, 0);
     });
-  }
+  
 
   for (let j = 0; j < lists.length; j++) {
     const list = lists[j];
@@ -48,8 +46,10 @@ for (let i = 0; i < list_items.length; i++) {
   }
 }
 
+// automatic movement after 5 seconds
 setTimeout(function() {
   const secondList = document.querySelectorAll('.list')[2]; // 0,1,2 -> rows of list
   const itemB = document.querySelector('#b');
+  
   secondList.appendChild(itemB);
 }, 5000);
