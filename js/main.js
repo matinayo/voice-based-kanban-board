@@ -30,18 +30,18 @@ for (let i = 0; i < list_items.length; i++) {
     // dragged into the list container
     list.addEventListener('dragenter', function(e) {
       e.preventDefault();
-      this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+      //this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
     });
 
     // drag away from list container
     list.addEventListener('dragleave', function(e) {
-      this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+     // this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
     });
 
     // drop in container, append item to the list container
     list.addEventListener('drop', function(e) {
       this.append(draggedItem);
-      this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+     // this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
     });
   }
 }
