@@ -1,3 +1,63 @@
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
+const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+
+if(SpeechRecognition){
+  console.log("Your browser supports speech recognition");
+  
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+
+  // listening on mic button events
+  const micButton = document.querySelector('#micButton');
+  const micImage = micButton.querySelector("img");
+  const suggestionContainer = document.querySelector('#suggestion');
+  suggestionContainer.style.display = 'none';
+
+  micButton.addEventListener("click", micButtonClick);
+  function micButtonClick(){
+    if(micImage.src.includes("play")){
+      // start speech recognition on button click
+      
+      recognition.start();
+    }else{
+      // stop speech recognition
+     
+      recognition.stop();
+    }
+  }
+
+  // events on start of speech-recognition
+  recognition.addEventListener("start", startSpeechRecognition);
+  function startSpeechRecognition(){
+    micImage.src = "images/user-talking.gif";    
+  suggestionContainer.style.display = 'block';
+    console.log('speech active');
+  }
+
+   // events on start of speech-recognition
+   recognition.addEventListener("end", endSpeechRecognition);
+   function endSpeechRecognition(){
+
+    suggestionContainer.style.display = 'none';
+    micImage.src = "images/play.gif";
+     console.log('speech disconnected');
+   }
+
+   // events of result from speech
+  recognition.addEventListener("result", resultOfSpeechRecognition);
+  function resultOfSpeechRecognition(event){
+    var lengthOfSequence = event.resultIndex;
+
+    // gets transcript of last statement
+    const transcript = event.results[lengthOfSequence][0].transcript;
+    console.log(transcript);
+    
+  }
+}
+
+
+// draggable
 const list_items = document.querySelectorAll('.list-item');
 const lists = document.querySelectorAll('.list');
 

@@ -22,21 +22,30 @@
         body {
             background-color: #fff;
         }
-        .circle {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
+
+       .circle {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.suggestion {
+    position: fixed;
+    bottom: 0;
+    right: 0%;
+    transform: translateX(-50%);
+    width: 20%;
 }
 
     </style>
@@ -443,7 +452,8 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
-                <a href="#" class="btn btn-primary er w-100 fs-6 px-8 py-4" data-bs-toggle="modal" data-bs-target="#kt_modal_new_target">Create New Target</a>
+                <a href="#" class="btn btn-primary er w-100 fs-6 px-8 py-4" data-bs-toggle="modal"
+                    data-bs-target="#kt_modal_new_target">Create New Target</a>
             </div>
             <div class="col-md-4 list">
                 <div class="mb-9">
@@ -519,9 +529,25 @@
         </div>
     </div>
     <hr class="mb-5">
-    <div class="circle shadow-lg mb-4">
-        <img src="images/system-talking.gif">
+    <div class="circle shadow-lg mb-4" id="micButton">
+        <img src="images/play.gif">
     </div>
+    <div class="container-fluid suggestion" id="suggestion" style="width: 20%;">
+        
+        <div class="card bg-secondary text-white shadow-sm" style="height: 30px;">
+            <div class="card-body p-2">
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-info-circle text-white"></i>
+                    </div>
+                    <div class="col-8">
+                        <span>Say: create task</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
     <script src="js/main.js"></script>
 </body>
