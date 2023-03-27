@@ -5,8 +5,10 @@ const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpe
 if(SpeechRecognition){
   console.log("Your browser supports speech recognition");
   
+  var synth = window.speechSynthesis;
   const recognition = new SpeechRecognition();
-  recognition.continuous = true;
+  recognition.continuous = true;  
+recognition.lang = 'en-GB';
 
   // listening on mic button events
   const micButton = document.querySelector('#micButton');
@@ -52,8 +54,29 @@ if(SpeechRecognition){
     // gets transcript of last statement
     const transcript = event.results[lengthOfSequence][0].transcript;
     console.log(transcript);
-    
+   speakOut(transcript); 
   }
+
+  
+/// speaks out from system
+function speakOut(word){
+  var speechUtterance = new SpeechSynthesisUtterance(word);
+  speechUtterance.onstart = function (event) {
+    console.log('SpeechSynthesisUtterance.onstart');
+    micImage.src = "images/system-talking.gif";    // system is talking
+  }
+  speechUtterance.onend = function (event) {
+    micImage.src = "images/user-talking.gif";    
+    console.log('SpeechSynthesisUtterance.onend'); // system finished talking
+  }
+  speechUtterance.onerror = function (event) {
+    console.error('SpeechSynthesisUtterance.onerror');
+    micImage.src = "images/user-talking.gif";
+  }
+  synth.speak(speechUtterance);
+  //utterThis.onend = afterSpeechCallback;
+}
+
 }
 
 
