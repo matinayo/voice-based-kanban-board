@@ -229,6 +229,7 @@ if (SpeechRecognition) {
       if (textContent) {
         const childElements = itemB.querySelector('.title-header');
         childElements.textContent = textContent;
+        textContent = null;
 
         speakOut('Title has been updated');
       } else {
