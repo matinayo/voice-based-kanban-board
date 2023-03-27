@@ -2,11 +2,18 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
 const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
 
-const createTaskPhrases = ['create', 'insert', 'add', 'implement', 'make', 'generate', 'compose', 'form', 'formulate', 'setup'];
-const updateTaskPhrases = ['update', 'set', 'change', 'alter', 'modify', 'edit', 'correct'];
-const taskIdList = ['M22', 'T16', 'M19']
+const createTaskPhrases = ['create', 'insert', 'add', 'implement', 'generate', 'compose', 'form', 'formulate', 'setup'];
+const updateTaskPhrases = ['update', 'set', 'change', 'alter', 'modify', 'edit', 'correct', 'make'];
+const taskIdList = ['M22', 'M16', 'M19']
 const updateStatusPhrases = ['inprogress', 'progress', 'pending', 'completed']
+const appreciationList = ['thank', 'nice', 'appreciate'];
+const wakeupList = ['hey', 'bob', 'hi', 'hello', 'holla'];
+const criticsList = ['don', 'what', 'think', 'maybe', 'do not', 'do not know', 'tell']; // I don't know what the id is, I think the id is
+const headerListPhrases = ['header', 'title', 'head', 'label', 'subject'];
 
+var textContent = null;
+var updateTask = null;
+var containsIdTask = null;
 var stage = 0;
 
 if (SpeechRecognition) {
@@ -57,7 +64,7 @@ if (SpeechRecognition) {
   recognition.addEventListener("nomatch", noMatchSpeechRecognition);
   function noMatchSpeechRecognition() {
 
-    speakOut("Talk clearly boy!, I didn't recognize that, or have you got some hot buns in your mouth?");
+    speakOut("I didn't recognize that, or have you got some hot buns in your mouth?");
     console.log('no match');
   }
 
@@ -77,47 +84,116 @@ if (SpeechRecognition) {
     const transcript = event.results[lengthOfSequence][0].transcript;
     console.log(transcript);
     console.log(event.results[lengthOfSequence][0].confidence)
-    // create
-    var createTask = matchesSequence(createTaskPhrases, transcript);
-    
-    if (createTask) {
-      createTaskProcess();
-    }else{
-      var updateTask = matchesSequence(updateTaskPhrases, transcript);      
-      if(updateTask){
-        stage = 20;
-        // get the id of task to update
-        var containsIdTask = matchesSequence(taskIdList, transcript);
-       console.log(containsIdTask);
-        if(!containsIdTask){
-          // ask for ID of task
-          console.log('no containsIdTask');
-          stage = 21; // does not contain task of ID
-          speakOut('Boy! Does your task not have an ID, what is the ID of your task?')
+    console.log(stage);
 
-        }else{
-          console.log('containsIdTask');
-          stage = 22;
-          // determine status to be updated to
-          var status = matchesSequence(updateStatusPhrases, transcript);
-          if(status){
-            // contains status to be updated to
-            updateTaskProcess(status, containsIdTask);
-          }
-          
-        }
-        
+    if (stage >= 20 && stage <= 29) {
+      // previous process for follow up answers
+      // update process
+      updateSequence(transcript);
+    } else {
+      // new process
+      // wake up
+      var wakeup = matchesSequence(wakeupList, transcript);
+      if (wakeup) {
+        speakOut('What do you want, you!')
+      }
+      // appreciation
+      var appreciation = matchesSequence(appreciationList, transcript);
+      if (appreciation) {
+        speakOut('You\'re welcome!');
       }
 
-    }
+      // create
+      var createTask = matchesSequence(createTaskPhrases, transcript);
 
+      if (createTask) {
+        createTaskProcess();
+      } else {
+        // update sequence
+        var isUpdateSequence = updateSequence(transcript);
+      }
+    }
+  }
+
+  // update sequence
+  function updateSequence(transcript) {
+
+    if (stage == 0) {
+      // new update request
+      updateTask = matchesSequence(updateTaskPhrases, transcript);
+      if (updateTask) {
+        stage = 20; // updates
+      }
+    }// else: follow up
+
+    if (updateTask) {
+      if (stage <= 21) {
+        var critic = matchesSequence(criticsList, transcript);
+        if (critic) {
+          speakOut('The ID is located on the top left section of the cards');
+        }
+
+        // get the id of task to update
+        containsIdTask = matchesSequence(taskIdList, transcript);
+        console.log(containsIdTask);
+      }
+
+      if (!containsIdTask && stage <= 21) {
+        // ask for ID of task
+        console.log('no containsIdTask');
+        stage = 21; // does not contain task of ID
+        speakOut('what is the ID of the task to be updated?');
+
+      } else {
+
+        console.log('containsIdTask');
+        stage = 22;
+        // determine status to be updated to
+        var status = matchesSequence(updateStatusPhrases, transcript);
+        if (status) {
+          // contains status to be updated to
+          updateTaskProcess(status, containsIdTask);
+
+        } else {
+          stage = 23;
+
+          // check if updating title or status
+          var titleSeq = matchesSequence(headerListPhrases, transcript);
+          console.log(titleSeq);
+          
+          if (titleSeq) {
+            // updating title
+
+            const lastToIndex = transcript.lastIndexOf(' to ');
+            if (lastToIndex !== -1) {
+              const wordsAfterTo = transcript.substring(lastToIndex + 4).split(' ');
+              const joinedString = wordsAfterTo.join(' ');
+              textContent = joinedString;
+              
+              if (textContent) {
+                updateTaskProcess('-', containsIdTask);
+              }
+            }
+
+          } else {
+            // ask for status to update to          
+            speakOut('what should the task be updated to?');
+          }
+        }
+
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   // function checks for matching sequence
   function matchesSequence(sequenceList, inputString) {
-   const match = sequenceList.find(seq => inputString.toLowerCase().includes(seq.toLowerCase()));
-   
-   if(match){
+    const match = sequenceList.find(seq => inputString.toLowerCase().includes(seq.toLowerCase()));
+
+    if (match) {
 
       console.log('Match found!');
       return match;
@@ -132,13 +208,13 @@ if (SpeechRecognition) {
 
   }
   // function to update task
-  function updateTaskProcess(columnName, idTitle){
+  function updateTaskProcess(columnName, idTitle) {
     var columnIndex = 0;
-    if(columnName == 'progress' || columnName == 'inprogress'){
+    if (columnName == 'progress' || columnName == 'inprogress') {
       columnIndex = 1;
-    }else if(columnName == 'pending'){
+    } else if (columnName == 'pending') {
       columnIndex = 0;
-    }else if(columnName == 'completed'){
+    } else if (columnName == 'completed') {
       columnIndex = 2;
     }
 
@@ -146,13 +222,42 @@ if (SpeechRecognition) {
     console.log(idTitle);
     console.log('---');
 
+    // automatic movement after 2 seconds
     setTimeout(function () {
-      const secondList = document.querySelectorAll('.list')[columnIndex]; // 0,1,2 -> rows of list
-      
+
       const itemB = document.querySelector(`#${idTitle}`);
-  
-      secondList.appendChild(itemB);
+      if (textContent) {
+        const childElements = itemB.querySelector('.title-header');
+        childElements.textContent = textContent;
+
+        speakOut('Title has been updated');
+      } else {
+        const secondList = document.querySelectorAll('.list')[columnIndex]; // 0,1,2 -> rows of list
+        secondList.appendChild(itemB);
+        fadeIn(itemB, 500);
+        speakOut(`Task ${idTitle} has been updated to ${columnName}`);
+        speakOut('Easy peasy!');
+      }
+      stage = 0;
+
     }, 2000);
+
+  }
+
+  function fadeIn(element, duration) {
+    element.style.opacity = 0;
+    element.style.display = 'block';
+    let start = performance.now();
+    requestAnimationFrame(function animate(time) {
+      let timeFraction = (time - start) / duration;
+      if (timeFraction > 1) {
+        timeFraction = 1;
+      }
+      element.style.opacity = timeFraction;
+      if (timeFraction < 1) {
+        requestAnimationFrame(animate);
+      }
+    });
   }
 
 
@@ -225,12 +330,5 @@ if (SpeechRecognition) {
     }
   }
 
-  // automatic movement after 5 seconds
-  // setTimeout(function () {
-  //   const secondList = document.querySelectorAll('.list')[2]; // 0,1,2 -> rows of list
-  //   const itemB = document.querySelector('#M22');
-
-  //   secondList.appendChild(itemB);
-  // }, 5000);
 }
 
