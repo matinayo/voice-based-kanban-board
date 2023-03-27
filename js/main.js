@@ -9,7 +9,7 @@ const updateStatusPhrases = ['inprogress', 'progress', 'pending', 'completed']
 const appreciationList = ['thank', 'nice', 'appreciate'];
 const wakeupList = ['hey', 'bob', 'hi', 'hello', 'holla'];
 const criticsList = ['don', 'what', 'think', 'maybe', 'do not', 'do not know', 'tell']; // I don't know what the id is, I think the id is
-const headerListPhrases = ['header', 'title', 'head', 'label', 'subject'];
+const headerListPhrases = ['header', 'title', 'head', 'label', 'subject', 'info'];
 
 var textContent = null;
 var updateTask = null;
@@ -95,7 +95,7 @@ if (SpeechRecognition) {
       // wake up
       var wakeup = matchesSequence(wakeupList, transcript);
       if (wakeup) {
-        speakOut('What do you want, you!')
+        speakOut('Hello!')
       }
       // appreciation
       var appreciation = matchesSequence(appreciationList, transcript);
