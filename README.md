@@ -1,5 +1,5 @@
 # novel-interaction-kanban-board
-NOVEL INTERACTION: speech synthesis - kanban task management
+Voice-Based Kanban Board | NOVEL INTERACTION
 
 <a href="assets/docs/novel-interaction-voice-based-kanban-board-report.pdf" target="_blank" >Read report</a>
 <br>
