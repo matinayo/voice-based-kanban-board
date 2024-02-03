@@ -1,4 +1,4 @@
-# novel-interaction-kanban-board
+# voice-based kanban board | novel-interaction
 Voice-Based Kanban Board | NOVEL INTERACTION
 
 <a href="assets/docs/novel-interaction-voice-based-kanban-board-report.pdf" target="_blank" >Read report</a>
