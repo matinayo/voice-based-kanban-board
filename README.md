@@ -1,7 +1,7 @@
 # voice-based kanban board | novel-interaction
 Voice-Based Kanban Board | NOVEL INTERACTION
 
-<a href="assets/docs/novel-interaction-voice-based-kanban-board-report.pdf" target="_blank" >Read report</a>
+<a href="https://matinayo.netlify.app/assets/docs/novel-interaction-voice-based-kanban-board-report.pdf" target="_blank" >Read report</a>
 <br>
 <br>
   Kanban board - It helps manage projects by tracking and organizing tasks, moving them between stages to ensure progress, avoid bottlenecks, and evaluate the end-to-end process.
